@@ -10,7 +10,7 @@ jobs:
 
      # build the application image
      - run: |
-        BRANCH="${CIRCLE_BRANCH}"
+        BRANCH=$(echo $CIRCLE_BRANCH | sed 's/\//-/g' | tr -cd '[:alnum:]_-')
         if [[ "$BRANCH" == "master" ]]; then
           BRANCH=latest
         fi
