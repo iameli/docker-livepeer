@@ -1,0 +1,19 @@
+version: 2
+jobs:
+ build:
+   machine:
+    image: ubuntu-1604:201903-01
+   steps:
+     - checkout
+
+     - run: echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+
+     # build the application image
+     - run: |
+        BRANCH="${CIRCLE_BRANCH}"
+        if [[ "$BRANCH" == "master" ]]; then
+          BRANCH=latest
+        fi
+        cd monitoring
+        docker build -t livepeerci/monitoring:$BRANCH .
+        docker push livepeerci/monitoring:$CIRCLE_BRANCH
